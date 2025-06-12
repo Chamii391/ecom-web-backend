@@ -59,7 +59,7 @@ export function saveProducts(req, res) {
                 message: "Product Added Successfully",
             });
         })
-        .catch(() => {
+        .catch((error) => {
             res.json({
                 message: "Error saving product",
                 error: error.message,
@@ -92,6 +92,67 @@ export async function deleteProduct(req, res) {
     
 }
 
+export async function updateProduct(req, res) {
+    if(!isAdmin(req)){
+        res.status(403).json({
+            message : "Unauthorized"
+        })
+        return
+    }
+    
+    try{
+
+        await Product.updateOne({product_id : req.params.product_id}, req.body)
+        res.status(403).json({
+            message : "Product Updated Successfully"
+        })
+
+    }catch(error){
+        res.status(500).json({
+            message : "Error updating product",
+            error : error.message
+        })
+    }
+
+}
+
+export async function getProductById(req, res) {
+
+    const product_id = req.params.product_id;
+
+    try{
+
+        const product = await Product.findOne({product_id : product_id})
+
+        if(product == null){
+            res.status(404).json({
+                message : "Product Not Found"
+            })
+            return
+        }
+        if(product.isAvailable){
+            res.json(product)
+        }
+        else{
+            if(!isAdmin(req)){
+                    res.status(404).json({
+                    message : "Product Not Found"
+                })
+                return
+            }
+            else{
+                res.json(product)
+            }
+        }
+        
+
+    }catch(error){
+        res.status(500).json({
+            message : "Error fetching product",
+            error : error.message
+        })
+
+    }
 
 
-
+}
