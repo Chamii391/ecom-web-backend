@@ -16,32 +16,27 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+//process.env.JWT_SECRET_KEY
 
-app.use(
-    (req,res,next)=>{
-        const tokenString = req.header("Authorization")
-        if(tokenString != null){
-            const token = tokenString.replace("Bearer ", "")
+app.use((req, res, next) => {
+    const tokenString = req.header("Authorization");
 
-            jwt.verify(token, process.env.JWT_SECRET_KEY,
-                (err,decoded)=>{
-                    if(decoded != null){
-                        req.user = decoded
-                        next()
-                    }else{
-                        console.log("invalid token")
-                        res.status(403).json({
-                            message : "Invalid token"
-                        })
-                    }
-                }
-            )
+    if (tokenString) {
+        const token = tokenString.replace("Bearer ", "");
 
-        }else{
-            next()
-        }
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (!err) {
+                req.user = decoded; // Attach decoded token to request
+            } else {
+                console.error("Invalid token:", err.message); // Log the error
+            }
+            next(); // Continue processing the request
+        });
+    } else {
+        next(); // Proceed without a token (guest access)
     }
-)
+});
+
 
 
 mongoose.connect(process.env.MONGO_URL)
