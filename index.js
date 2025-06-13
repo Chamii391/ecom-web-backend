@@ -23,7 +23,7 @@ app.use(
         if(tokenString != null){
             const token = tokenString.replace("Bearer ", "")
 
-            jwt.verify(token, "secret", 
+            jwt.verify(token, process.env.JWT_SECRET_KEY,
                 (err,decoded)=>{
                     if(decoded != null){
                         req.user = decoded
