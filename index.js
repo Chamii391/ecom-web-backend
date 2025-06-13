@@ -6,6 +6,8 @@ import userRouter from './routes/userRouter.js';
 import jwt from 'jsonwebtoken';
 import orderRouter from './routes/orderRouter.js';
 import cors from 'cors';
+import dotenv from "dotenv";
+dotenv.config();
 
 
 
@@ -42,7 +44,7 @@ app.use(
 )
 
 
-mongoose.connect("mongodb+srv://admin:admin123@cluster0.yuoza.mongodb.net/myDatabase?retryWrites=true&w=majority")
+mongoose.connect(process.env.MONGO_URL)
 
 
 .then(() => console.log("Connected to DB"))
