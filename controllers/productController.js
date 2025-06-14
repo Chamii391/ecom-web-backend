@@ -7,10 +7,10 @@ export async function getProducts(req, res) {
         let products;
 
         if (user && isAdmin(req)) {
-            // Admin: View all products
+            
             products = await Product.find();
         } else {
-            // Guests and regular users: View only available products
+           
             products = await Product.find({ isAvailable: true });
         }
 
@@ -18,7 +18,7 @@ export async function getProducts(req, res) {
     } catch (err) {
         res.status(500).json({
             message: "Failed to get products",
-            error: err.message, // Error message to debug
+            error: err.message, 
         });
     }
 }
