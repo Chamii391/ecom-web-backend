@@ -97,16 +97,15 @@ export function loginUser(req, res) {
         })
 }
 
-export function isAdmin(req){
-
-     if(req.user == null){
-       return falase;
-    }
-
-    if(req.user.role != "admin"){
-        return false;
-    }
-    return true;
+export function isAdmin(req) {
+  if (req.user == null) {
+    return false;  
+  }
+  if (req.user.role !== "admin") {
+    return false;
+  }
+  return true;
 }
+
 
 
